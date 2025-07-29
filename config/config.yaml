@@ -5,6 +5,9 @@ config:
   answer_automatically: 1
   # Answer automatically lets you decide if you want the program to automatically answer
   # or just give you the answer allowing you to answer manually (less error prone but not as convinent.)
+  delete_old_screenshots: 1
+  # This allows you to decide if you want to keep old screenshots (ones that are not in use anymore.)
+
 
 
 ui:
