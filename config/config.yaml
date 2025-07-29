@@ -1,0 +1,47 @@
+# config/config.yaml
+
+config:
+  # Most things listed in here are booleans, 1 is true and 0 is false (1: yes 2: no)
+  answer_automatically: 1
+  # Answer automatically lets you decide if you want the program to automatically answer
+  # or just give you the answer allowing you to answer manually (less error prone but not as convinent.)
+
+
+ui:
+  question_region: [0, 0]
+  # Question_region is preconfigure for a 1920x1080 screen
+  # If your screen is not 1920x1080, you will need to change these values manually
+  answers_region: [0, 0]
+  # answers_region is the region where the multiple choice answers are for the question.
+  # Requried for answer automatically
+  answer_box: [0, 0]
+  # Required for answer automatically
+
+
+system:
+  tesseract_cmd: "/usr/bin/tesseract" # Linux Configuration
+  # tesseract_cmd: "C:\\Program Files\\Tesseract-OCR\\tesseract.exe" # Windows config
+  # /opt/homebrew/bin/tesseract # Apple Silicon MAC
+  # /usr/local/bin/tesseract # Intel based MAC
+
+# Delay only applies if you have answer_automatically set to 1
+
+delay:
+  type_delay: 40
+  # This is the delay for it to type in after it gets the awnser
+  # This is set to 40 as a base line (i recommend increasing it.)
+  answer_delay: 20
+  # This is the delay for the program to click the Submit box and answer the question.
+  # This is set to 20 as a base line (i recommend increasing it depending on your level in maths.)
+  variable_delay: 1
+  # This adds variablity to the delays, preventing answers from looking robotic.
+  # It is highly recommended to keep this enabled.
+  # 0: Disabled
+  # 1: Enabled
+
+# Unless there is an issue or you are specifically told to change this,
+# leave it on "none" mode.
+debug:
+  log_level: "debug"
+  # log_level includes debug, minimal and none.
+  # This edits the logging level.
