@@ -1,0 +1,2 @@
+This folder is used to store logs related to the project.
+It may contain error logs, debug information, or other relevant data.

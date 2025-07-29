@@ -1,0 +1,2 @@
+This folder is used for cacheing information related to the project.
+It may contain temporary files, logs, or other data.
