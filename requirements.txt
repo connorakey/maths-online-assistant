@@ -1,3 +1,5 @@
 pyyaml
 python-dotenv
 pytesseract
+pyautogui
+dotenv
