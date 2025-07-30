@@ -5,8 +5,8 @@
 # This file stores the screenshots in workspace/screenshots and deletes old screenshots if necessary.
 
 # TODO:
-# Add debug functionality to this script, possibily with an external python script like debug.py
-# Implement deletion of old screenshot folders
+# Add debug functionality to this script, possibily with an external python script like debug.py replace the commented print functions with logging.
+
 
 from pathlib import Path
 import pyautogui
@@ -33,6 +33,7 @@ answers_dir.mkdir(parents=True, exist_ok=True)
 def capture_screenshot():
 
     points = config["ui"]["question_region"]
+    #print(f"Captures points from config {points}")
 
     min_x = min(p[0] for p in points)
     max_x = max(p[0] for p in points)
@@ -46,13 +47,18 @@ def capture_screenshot():
 
         
     filename = f"mathsonline-answer-{random_letter_string(random_letters)}.png"
+    #print(f"Generated file name: {filename}")
 
     while True:
         if check_if_exists(answers_dir, filename):
+            #print(f"Filename: {filename} exists, randomly generating another file name.")
             filename = f"mathsonline-answer-{random_letter_string(random_letters)}.png"
+            #print(f"Generated file name: {filename}")
         else:
+            #print("File name does not exist.")
             save_path = answers_dir / filename
             screenshot.save(save_path)
+            #print("Screenshot saved.")
             break
 
     
@@ -66,4 +72,21 @@ def check_if_exists(path: str, filename: str):
     else:
         return False
 
-capture_screenshot()
+def clear_all_screenshots():
+    success = True
+    for path in [questions_dir, answers_dir]:
+        if not path.exists() or not path.is_dir():
+            #print(f"Path {path} does not exist or is not a directory.")
+            continue
+
+        for file_path in path.iterdir():
+            if file_path.is_file() and file_path.suffix.lower() == ".png":
+                try:
+                    file_path.unlink()
+                    #print(f"Deleted file: {file_path}")
+                except Exception as e:
+                    #print(f"Error deleting file {file_path}: {e}")
+                    success = False
+            #else:
+                #print(f"Skipping file: {file_path}")
+    return success
