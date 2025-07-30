@@ -11,14 +11,11 @@ config:
 
 
 ui:
-  question_region: [0, 0]
+  question_region: [[667, 442], [1361, 463], [1371, 712], [776, 720]]
   # Question_region is preconfigure for a 1920x1080 screen
   # If your screen is not 1920x1080, you will need to change these values manually
-  answers_region: [0, 0]
-  # answers_region is the region where the multiple choice answers are for the question.
-  # Requried for answer automatically
-  answer_box: [0, 0]
-  # Required for answer automatically
+  # The larger the screenshot the longer it will take for a response.
+  # This is formatted X1, X2, Y1, Y2 (x being the top corners, and y being the bottom corners.)
 
 
 system:

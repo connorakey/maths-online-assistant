@@ -7,7 +7,6 @@
 # TODO:
 # Add debug functionality to this script, possibily with an external python script like debug.py
 # Implement deletion of old screenshot folders
-# Check if file exists, so errors don't occur
 
 from pathlib import Path
 import pyautogui
@@ -31,25 +30,40 @@ questions_dir.mkdir(parents=True, exist_ok=True)
 answers_dir.mkdir(parents=True, exist_ok=True)
 
 
-def capture_question_screenshot():
-    question_region = config["ui"]["question_region"]
-    screenshot = pyautogui.screenshot(region=question_region)
+def capture_screenshot():
 
-    filename = f"mathsonline-question-{random_letter_string(random_letters)}.png"
+    points = config["ui"]["question_region"]
 
-    save_path = questions_dir / filename
-    screenshot.save(save_path)
+    min_x = min(p[0] for p in points)
+    max_x = max(p[0] for p in points)
+    min_y = min(p[1] for p in points)
+    max_y = max(p[1] for p in points)
 
-    return filename
+    width = max_x - min_x
+    height = max_y - min_y
 
+    screenshot = pyautogui.screenshot(region=(min_x, min_y, width, height))
 
-def capture_answers_screenshot():
-    answer_region = config["ui"]["answers_region"]
-    screenshot = pyautogui.screenshot(region=answer_region)
-
+        
     filename = f"mathsonline-answer-{random_letter_string(random_letters)}.png"
 
-    save_path = answers_dir / filename
-    screenshot.save(save_path)
+    while True:
+        if check_if_exists(answers_dir, filename):
+            filename = f"mathsonline-answer-{random_letter_string(random_letters)}.png"
+        else:
+            save_path = answers_dir / filename
+            screenshot.save(save_path)
+            break
+
+    
     
     return filename
+
+def check_if_exists(path: str, filename: str):
+    file_path = path / filename
+    if file_path.exists() and file_path.is_file():
+        return True
+    else:
+        return False
+
+capture_screenshot()
