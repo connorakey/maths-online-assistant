@@ -1,12 +1,10 @@
 # config/config.yaml
 
 config:
-  # Most things listed in here are booleans, 1 is true and 0 is false (1: yes 2: no)
-  answer_automatically: 1
-  # Answer automatically lets you decide if you want the program to automatically answer
-  # or just give you the answer allowing you to answer manually (less error prone but not as convinent.)
   delete_old_screenshots: 1
   # This allows you to decide if you want to keep old screenshots (ones that are not in use anymore.)
+  # If you set this to 1, it will delete old screenshots.
+  # If you set this to 0, it will not delete old screenshots.
 
 
 
