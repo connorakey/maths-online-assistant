@@ -1,3 +1,8 @@
+# utilities/mouse-position.py
+# This script captures the mouse click position and prints it to the console.
+# This can be used for configuration purposes or debugging. The script uses the `pynput` library.
+# Ensure you have installed the python packages in utilities/utility-requirements.txt
+
 from pynput import mouse
 
 def on_click(x, y, button, pressed):
