@@ -25,6 +25,8 @@ system:
   # /usr/local/bin/tesseract # Intel based MAC
 
 debug:
-  log_level: "debug"
-  # log_level includes debug, minimal and none.
+  enabled: 1
+  level: "debug"
+  # log_level includes debug, minimal 
   # This edits the logging level.
+  # If you do not want to see debug messages, set this to minimal, and if you seriously don't want to see any messages at all (not recommended) set enabled to 0.

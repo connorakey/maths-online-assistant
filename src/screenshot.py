@@ -9,7 +9,7 @@ import pyautogui
 from config import config
 import random
 import string
-from src.debug import log  # Import the log function
+from src.debug import log
 
 def random_letter_string(num: int):
     letters = string.ascii_letters
@@ -29,7 +29,7 @@ answers_dir.mkdir(parents=True, exist_ok=True)
 def capture_screenshot():
 
     points = config["ui"]["question_region"]
-    log(f"Captures points from config {points}")
+    log(f"Captures points from config {points}", "debug")
 
     min_x = min(p[0] for p in points)
     max_x = max(p[0] for p in points)
@@ -42,18 +42,18 @@ def capture_screenshot():
     screenshot = pyautogui.screenshot(region=(min_x, min_y, width, height))
 
     filename = f"mathsonline-answer-{random_letter_string(random_letters)}.png"
-    log(f"Generated file name: {filename}")
+    log(f"Generated file name: {filename}", "debug")
 
     while True:
         if check_if_exists(answers_dir, filename):
-            log(f"Filename: {filename} exists, randomly generating another file name.")
+            log(f"Filename: {filename} exists, randomly generating another file name.", "debug")
             filename = f"mathsonline-answer-{random_letter_string(random_letters)}.png"
-            log(f"Generated file name: {filename}")
+            log(f"Generated file name: {filename}", "debug")
         else:
-            log("File name does not exist.")
+            log("File name does not exist.", "debug")
             save_path = answers_dir / filename
             screenshot.save(save_path)
-            log("Screenshot saved.")
+            log("Screenshot saved.", "debug")
             break
 
     return filename
@@ -69,16 +69,16 @@ def clear_all_screenshots():
     success = True
     for path in [questions_dir, answers_dir]:
         if not path.exists() or not path.is_dir():
-            log(f"Path {path} does not exist or is not a directory.")
+            log(f"Path {path} does not exist or is not a directory.", "minimal")
             continue
 
         for file_path in path.iterdir():
             if file_path.is_file() and file_path.suffix.lower() == ".png":
                 try:
                     file_path.unlink()
-                    log(f"Deleted file: {file_path}")
+                    log(f"Deleted file: {file_path}", "debug")
                 except Exception as e:
-                    log(f"Error deleting file {file_path}: {e}")
+                    log(f"Error deleting file {file_path}: {e}", "debug")
                     success = False
             else:
-                log(f"Skipping file: {file_path}")
+                log(f"Skipping file: {file_path}", "debug")

@@ -1,2 +1,6 @@
 This folder is used to store logs related to the project.
 It may contain error logs, debug information, or other relevant data.
+
+Logs are structured like this:
+Name: debug-{YEAR}-{MONTH}-{DATE}-{random 12 character string}.log
+Log: {YEAR}-{MONTH}-{DATE} {HH}-{MM}-{SS} [LEVEL] {MESSAGE}

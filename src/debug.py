@@ -1,50 +1,59 @@
-import os
+# src/debug.py
+# This module provides debugging utilities for the Maths Online application.
+# It includes a logging function that writes debug messages to a log file.
+
+from pathlib import Path
+from datetime import datetime
+from config import config
 import random
 import string
-from datetime import datetime
-import yaml
 
-def load_config():
-    config_path = os.path.join(os.path.dirname(__file__), '..', 'config', 'config.yaml')
-    with open(config_path, 'r', encoding='utf-8') as f:
-        config = yaml.safe_load(f)
-    if 'config' in config:
-        return config['config']
-    return config
 
-_config = load_config()
-LOG_LEVEL = _config.get('debug', {}).get('log_level', 'debug').lower()
+workspace = Path("workspace")
+logs = workspace / "logs"
 
-LOG_LEVELS = {
-    'none': 0,
-    'minimal': 1,
-    'debug': 2
-}
+def random_letter_string(num: int):
+    letters = string.ascii_letters
+    return ''.join(random.choice(letters) for _ in range(num))
 
-def get_log_level():
-    return LOG_LEVELS.get(LOG_LEVEL, 2)
+file_name = f"debug-{datetime.now().strftime('%Y-%m-%d')}-{random_letter_string(12)}.log"
 
-def generate_log_filename():
-    now = datetime.now()
-    rand_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=12))
-    return f"{now.year}-{now.month:02d}-{now.day:02d}-DEBUG-LOG-{rand_str}.txt"
+logs.mkdir(parents=True, exist_ok=True)
 
-LOG_FILENAME = generate_log_filename()
-LOG_FILEPATH = os.path.join(".", LOG_FILENAME)
+def log(message: str, level: str):
+    if level not in ["debug", "minimal"]:
+        raise ValueError("Invalid log level. Use 'debug' or 'minimal'.")
 
-def log(message: str, level: str = "debug"):
-    level = level.lower()
-    current_level = get_log_level()
+    if not config["debug"]["enabled"]:
+        return
 
-    # Only log if the message level is allowed by config
-    if level == "minimal" and current_level >= 1:
-        _write_log(message)
-    elif level == "debug" and current_level >= 2:
-        _write_log(message)
-    # If log_level is 'none', nothing is logged
+    log_file = logs / file_name
 
-def _write_log(message: str):
-    now = datetime.now()
-    timestamp = f"{now.year}-{now.month:02d}-{now.day:02d}-{now.minute:02d}-{now.second:02d}"
-    with open(LOG_FILEPATH, "a", encoding="utf-8") as f:
-        f.write(f"{timestamp}: {message}\n")
+    if config["debug"]["level"] == "minimal" and level == "minimal":
+        with log_file.open("a") as f:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            f.write(f"{timestamp} [{level}] {message}\n")
+            print(f"{timestamp} [{level}] {message}")
+    elif config["debug"]["level"] == "debug":
+        with log_file.open("a") as f:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            f.write(f"{timestamp} [{level}] {message}\n")
+            print(f"{timestamp} [{level}] {message}")
+
+def clear_all_logs():
+    success = True
+    for path in [logs]:
+        if not path.exists() or not path.is_dir():
+            log(f"Path {path} does not exist or is not a directory.", "minimal")
+            continue
+
+        for file_path in path.iterdir():
+            if file_path.is_file() and file_path.suffix.lower() == ".log":
+                try:
+                    file_path.unlink()
+                    log(f"Deleted file: {file_path}", "debug")
+                except Exception as e:
+                    log(f"Error deleting file {file_path}: {e}", "debug")
+                    success = False
+            else:
+                log(f"Skipping file: {file_path}", "debug")
