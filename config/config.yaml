@@ -24,23 +24,6 @@ system:
   # /opt/homebrew/bin/tesseract # Apple Silicon MAC
   # /usr/local/bin/tesseract # Intel based MAC
 
-# Delay only applies if you have answer_automatically set to 1
-
-delay:
-  type_delay: 40
-  # This is the delay for it to type in after it gets the awnser
-  # This is set to 40 as a base line (i recommend increasing it.)
-  answer_delay: 20
-  # This is the delay for the program to click the Submit box and answer the question.
-  # This is set to 20 as a base line (i recommend increasing it depending on your level in maths.)
-  variable_delay: 1
-  # This adds variablity to the delays, preventing answers from looking robotic.
-  # It is highly recommended to keep this enabled.
-  # 0: Disabled
-  # 1: Enabled
-
-# Unless there is an issue or you are specifically told to change this,
-# leave it on "none" mode.
 debug:
   log_level: "debug"
   # log_level includes debug, minimal and none.
