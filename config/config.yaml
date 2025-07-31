@@ -14,6 +14,8 @@ ui:
   # If your screen is not 1920x1080, you will need to change these values manually
   # The larger the screenshot the longer it will take for a response.
   # This is formatted X1, X2, Y1, Y2 (x being the top corners, and y being the bottom corners.)
+  # The easiest way to get these values is to use the screenshot tool in the utiliy folder.
+  # You can run it with the command `python -m utilities.mouse-position` and it will come back with the coordinates of your mouse each time you click. 
 
 
 system:
