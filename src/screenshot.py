@@ -4,15 +4,12 @@
 # It captures screenshots of the question and answers regions based on the configuration settings.
 # This file stores the screenshots in workspace/screenshots and deletes old screenshots if necessary.
 
-# TODO:
-# Add debug functionality to this script, possibily with an external python script like debug.py replace the commented print functions with logging.
-
-
 from pathlib import Path
 import pyautogui
 from config import config
 import random
 import string
+from src.debug import log  # Import the log function
 
 def random_letter_string(num: int):
     letters = string.ascii_letters
@@ -29,11 +26,10 @@ random_letters = 12
 questions_dir.mkdir(parents=True, exist_ok=True)
 answers_dir.mkdir(parents=True, exist_ok=True)
 
-
 def capture_screenshot():
 
     points = config["ui"]["question_region"]
-    #print(f"Captures points from config {points}")
+    log(f"Captures points from config {points}")
 
     min_x = min(p[0] for p in points)
     max_x = max(p[0] for p in points)
@@ -45,24 +41,21 @@ def capture_screenshot():
 
     screenshot = pyautogui.screenshot(region=(min_x, min_y, width, height))
 
-        
     filename = f"mathsonline-answer-{random_letter_string(random_letters)}.png"
-    #print(f"Generated file name: {filename}")
+    log(f"Generated file name: {filename}")
 
     while True:
         if check_if_exists(answers_dir, filename):
-            #print(f"Filename: {filename} exists, randomly generating another file name.")
+            log(f"Filename: {filename} exists, randomly generating another file name.")
             filename = f"mathsonline-answer-{random_letter_string(random_letters)}.png"
-            #print(f"Generated file name: {filename}")
+            log(f"Generated file name: {filename}")
         else:
-            #print("File name does not exist.")
+            log("File name does not exist.")
             save_path = answers_dir / filename
             screenshot.save(save_path)
-            #print("Screenshot saved.")
+            log("Screenshot saved.")
             break
 
-    
-    
     return filename
 
 def check_if_exists(path: str, filename: str):
@@ -76,17 +69,16 @@ def clear_all_screenshots():
     success = True
     for path in [questions_dir, answers_dir]:
         if not path.exists() or not path.is_dir():
-            #print(f"Path {path} does not exist or is not a directory.")
+            log(f"Path {path} does not exist or is not a directory.")
             continue
 
         for file_path in path.iterdir():
             if file_path.is_file() and file_path.suffix.lower() == ".png":
                 try:
                     file_path.unlink()
-                    #print(f"Deleted file: {file_path}")
+                    log(f"Deleted file: {file_path}")
                 except Exception as e:
-                    #print(f"Error deleting file {file_path}: {e}")
+                    log(f"Error deleting file {file_path}: {e}")
                     success = False
-            #else:
-                #print(f"Skipping file: {file_path}")
-    return success
+            else:
+                log(f"Skipping file: {file_path}")
