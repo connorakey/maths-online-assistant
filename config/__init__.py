@@ -11,14 +11,16 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 
-ENV_FILE = Path(__file__).parent / 'secrets.env'
+ENV_FILE = Path(__file__).parent / "secrets.env"
 load_dotenv(dotenv_path=ENV_FILE)
 
-CONFIG_FILE = Path(__file__).parent / 'config.yaml'
+CONFIG_FILE = Path(__file__).parent / "config.yaml"
+
 
 def load_config():
-    with open(CONFIG_FILE, 'r') as file:
+    with open(CONFIG_FILE, "r") as file:
         return yaml.safe_load(file)
+
 
 config = load_config()
 

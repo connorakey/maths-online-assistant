@@ -12,13 +12,18 @@ import string
 workspace = Path("workspace")
 logs = workspace / "logs"
 
+
 def random_letter_string(num: int):
     letters = string.ascii_letters
-    return ''.join(random.choice(letters) for _ in range(num))
+    return "".join(random.choice(letters) for _ in range(num))
 
-file_name = f"debug-{datetime.now().strftime('%Y-%m-%d')}-{random_letter_string(12)}.log"
+
+file_name = (
+    f"debug-{datetime.now().strftime('%Y-%m-%d')}-{random_letter_string(12)}.log"
+)
 
 logs.mkdir(parents=True, exist_ok=True)
+
 
 def log(message: str, level: str):
     if level not in ["debug", "minimal"]:
@@ -40,6 +45,7 @@ def log(message: str, level: str):
             f.write(f"{timestamp} [{level}] {message}\n")
             print(f"{timestamp} [{level}] {message}")
 
+
 def clear_all_logs():
     success = True
     for path in [logs]:
@@ -57,3 +63,4 @@ def clear_all_logs():
                     success = False
             else:
                 log(f"Skipping file: {file_path}", "debug")
+    return success

@@ -11,9 +11,11 @@ import random
 import string
 from src.debug import log
 
+
 def random_letter_string(num: int):
     letters = string.ascii_letters
-    return ''.join(random.choice(letters) for _ in range(num))
+    return "".join(random.choice(letters) for _ in range(num))
+
 
 workspace = Path("workspace")
 screenshots = workspace / "screenshots"
@@ -25,6 +27,7 @@ random_letters = 12
 
 questions_dir.mkdir(parents=True, exist_ok=True)
 answers_dir.mkdir(parents=True, exist_ok=True)
+
 
 def capture_screenshot():
 
@@ -46,7 +49,10 @@ def capture_screenshot():
 
     while True:
         if check_if_exists(answers_dir, filename):
-            log(f"Filename: {filename} exists, randomly generating another file name.", "debug")
+            log(
+                f"Filename: {filename} exists, randomly generating another file name.",
+                "debug",
+            )
             filename = f"mathsonline-answer-{random_letter_string(random_letters)}.png"
             log(f"Generated file name: {filename}", "debug")
         else:
@@ -58,12 +64,14 @@ def capture_screenshot():
 
     return filename
 
+
 def check_if_exists(path: str, filename: str):
     file_path = path / filename
     if file_path.exists() and file_path.is_file():
         return True
     else:
         return False
+
 
 def clear_all_screenshots():
     success = True
