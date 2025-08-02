@@ -13,6 +13,15 @@ from src.debug import log
 
 
 def random_letter_string(num: int):
+    """
+    Generate a random string of ASCII letters of length `num`.
+
+    Args:
+        num (int): The length of the string to generate.
+
+    Returns:
+        str: A random string of ASCII letters.
+    """
     letters = string.ascii_letters
     return "".join(random.choice(letters) for _ in range(num))
 
@@ -30,7 +39,15 @@ answers_dir.mkdir(parents=True, exist_ok=True)
 
 
 def capture_screenshot():
+    """
+    Capture a screenshot of the question region as defined in the config.
 
+    The screenshot is saved in the answers directory with a unique filename.
+    If a generated filename already exists, a new one is generated.
+
+    Returns:
+        str: The filename of the saved screenshot.
+    """
     points = config["ui"]["question_region"]
     log(f"Captures points from config {points}", "debug")
 
@@ -66,6 +83,16 @@ def capture_screenshot():
 
 
 def check_if_exists(path: str, filename: str):
+    """
+    Check if a file exists at the given path with the specified filename.
+
+    Args:
+        path (str or Path): The directory path.
+        filename (str): The filename to check.
+
+    Returns:
+        bool: True if the file exists and is a file, False otherwise.
+    """
     file_path = path / filename
     if file_path.exists() and file_path.is_file():
         return True
@@ -74,6 +101,12 @@ def check_if_exists(path: str, filename: str):
 
 
 def clear_all_screenshots():
+    """
+    Delete all PNG screenshot files in the questions and answers directories.
+
+    Returns:
+        bool: True if all deletions succeeded, False if any deletion failed.
+    """
     success = True
     for path in [questions_dir, answers_dir]:
         if not path.exists() or not path.is_dir():

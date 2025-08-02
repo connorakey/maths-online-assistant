@@ -14,6 +14,15 @@ logs = workspace / "logs"
 
 
 def random_letter_string(num: int):
+    """
+    Generate a random string of ASCII letters of length `num`.
+
+    Args:
+        num (int): The length of the string to generate.
+
+    Returns:
+        str: A random string of ASCII letters.
+    """
     letters = string.ascii_letters
     return "".join(random.choice(letters) for _ in range(num))
 
@@ -26,6 +35,16 @@ logs.mkdir(parents=True, exist_ok=True)
 
 
 def log(message: str, level: str):
+    """
+    Log a message to the debug log file and print it to the console.
+
+    Args:
+        message (str): The message to log.
+        level (str): The log level, either 'debug' or 'minimal'.
+
+    Raises:
+        ValueError: If the log level is not 'debug' or 'minimal'.
+    """
     if level not in ["debug", "minimal"]:
         raise ValueError("Invalid log level. Use 'debug' or 'minimal'.")
 
@@ -47,6 +66,12 @@ def log(message: str, level: str):
 
 
 def clear_all_logs():
+    """
+    Delete all log files in the logs directory.
+
+    Returns:
+        bool: True if all deletions succeeded, False if any deletion failed.
+    """
     success = True
     for path in [logs]:
         if not path.exists() or not path.is_dir():
