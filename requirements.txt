@@ -4,3 +4,4 @@ pytesseract
 pyautogui
 dotenv
 pytest
+pytest-mock
