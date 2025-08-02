@@ -90,3 +90,4 @@ def clear_all_screenshots():
                     success = False
             else:
                 log(f"Skipping file: {file_path}", "debug")
+    return success
