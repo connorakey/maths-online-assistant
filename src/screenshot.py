@@ -10,6 +10,7 @@ from config import config
 import random
 import string
 from src.debug import log
+from PIL import Image
 
 
 def random_letter_string(num: int):
@@ -27,6 +28,7 @@ def random_letter_string(num: int):
 
 
 workspace = Path("workspace")
+cache_dir = workspace / "cache"
 screenshots = workspace / "screenshots"
 
 questions_dir = screenshots / "questions"
@@ -80,6 +82,26 @@ def capture_screenshot():
             break
 
     return filename
+
+
+def compress_screenshot(filename: str, quality: int = 60):
+    """
+    Compress a screenshot file to reduce its size and move it to the cache directory.
+
+    Args:
+        filename (str): The filename of the screenshot to compress.
+        quality (int): JPEG quality (1-95, higher is better quality).
+
+    Returns:
+        str: The new compressed filename.
+    """
+    file_path = answers_dir / filename
+    img = Image.open(file_path)
+    compressed_filename = filename.replace(".png", ".jpg")
+    compressed_path = cache_dir / compressed_filename
+    img = img.convert("RGB")  # JPEG does not support transparency
+    img.save(compressed_path, "JPEG", quality=quality, optimize=True)
+    return
 
 
 def check_if_exists(path: str, filename: str):
