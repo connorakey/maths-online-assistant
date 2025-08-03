@@ -47,6 +47,8 @@ def capture_screenshot():
     The screenshot is saved in the answers directory with a unique filename.
     If a generated filename already exists, a new one is generated.
 
+    The screenshot is then saved in the workspace/answers directory.
+
     Returns:
         str: The filename of the saved screenshot.
     """
@@ -161,7 +163,7 @@ def optimize_image_for_openai(
     img.save(output_path, "JPEG", quality=quality, optimize=True)
     log(f"Image optimized and saved to {output_path}", "debug")
 
-    return
+    return output_path
 
 
 def encode_image_to_base64(image_path):
