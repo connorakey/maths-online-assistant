@@ -47,6 +47,8 @@ def capture_screenshot():
     The screenshot is saved in the answers directory with a unique filename.
     If a generated filename already exists, a new one is generated.
 
+    The screenshot is then saved in the workspace/answers directory.
+
     Returns:
         str: The filename of the saved screenshot.
     """
