@@ -84,26 +84,6 @@ def capture_screenshot():
     return filename
 
 
-def compress_screenshot(filename: str, quality: int = 60):
-    """
-    Compress a screenshot file to reduce its size and move it to the cache directory.
-
-    Args:
-        filename (str): The filename of the screenshot to compress.
-        quality (int): JPEG quality (1-95, higher is better quality).
-
-    Returns:
-        str: The new compressed filename.
-    """
-    file_path = answers_dir / filename
-    img = Image.open(file_path)
-    compressed_filename = filename.replace(".png", ".jpg")
-    compressed_path = cache_dir / compressed_filename
-    img = img.convert("RGB")  # JPEG does not support transparency
-    img.save(compressed_path, "JPEG", quality=quality, optimize=True)
-    return
-
-
 def check_if_exists(path: str, filename: str):
     """
     Check if a file exists at the given path with the specified filename.
@@ -146,3 +126,44 @@ def clear_all_screenshots():
             else:
                 log(f"Skipping file: {file_path}", "debug")
     return success
+
+
+def optimize_image_for_openai(
+    input_path, output_path=None, max_size=(600, 600), quality=60
+):
+    """
+    Optimize an image to use the least amount of OpenAI tokens possible.
+    This includes resizing, converting to JPEG, and compressing.
+    The optimized image is saved to workspace/cache.
+
+    Args:
+        input_path (str or Path): Path to the input image file.
+        output_path (str or Path, optional): Path to save the optimized image. If None, saves to cache.
+        max_size (tuple): Maximum (width, height) for resizing.
+        quality (int): JPEG quality (1-95, lower means more compression).
+
+    Returns:
+        Path: Path to the optimized image file in cache.
+    """
+    img = Image.open(input_path)
+    img = img.convert("RGB")  # JPEG does not support transparency
+
+    # Resize if larger than max_size
+    img.thumbnail(max_size, Image.LANCZOS)
+
+    # Save to cache_dir if output_path not specified
+    if output_path is None:
+        output_path = cache_dir / (Path(input_path).stem + ".jpg")
+    else:
+        output_path = Path(output_path)
+
+    # Save as compressed JPEG
+    img.save(output_path, "JPEG", quality=quality, optimize=True)
+    log(f"Image optimized and saved to {output_path}", "debug")
+
+    return
+
+
+screenshot_output = capture_screenshot()
+screenshot_path = answers_dir / screenshot_output
+screenshot_output = optimize_image_for_openai(screenshot_path)
