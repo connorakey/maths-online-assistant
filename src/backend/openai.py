@@ -9,11 +9,9 @@ from .screenshot import encode_image_to_base64
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 
-def get_step_by_step_guidance(image_path):
+def get_step_by_step_guidance(image_b64):
     if not OPENAI_API_KEY:
         raise ValueError("OpenAI API key is not set.")
-
-    image_b64 = encode_image_to_base64(image_path)
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -39,7 +37,7 @@ def get_step_by_step_guidance(image_path):
     return response.choices[0].message.content
 
 
-def get_final_answer(image_path):
+def get_final_answer(image_b64):
     if not OPENAI_API_KEY:
         raise ValueError("OpenAI API key is not set.")
 

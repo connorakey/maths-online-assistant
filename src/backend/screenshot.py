@@ -9,7 +9,7 @@ import pyautogui
 from config import config
 import random
 import string
-from src.debug import log
+from .debug import log
 from PIL import Image
 
 

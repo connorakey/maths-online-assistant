@@ -10,6 +10,7 @@ from .screenshot import (
     capture_screenshot,
     optimize_image_for_openai,
     clear_all_screenshots,
+    encode_image_to_base64,
     answers_dir,
 )
 from config import config
@@ -55,6 +56,8 @@ def main():
 
                 optimized_image = optimize_image_for_openai(screenshot_file)
                 log(f"Optimized image for OpenAI: {optimized_image}", "debug")
+
+                optimized_image = encode_image_to_base64(optimized_image)
 
                 step_by_step_guidance = get_step_by_step_guidance(optimized_image)
                 log(f"Step-by-step guidance: {step_by_step_guidance}", "debug")

@@ -9,7 +9,7 @@ config:
 
 
 ui:
-  question_region: [[667, 442], [1361, 463], [1371, 712], [776, 720]]
+  question_region: [[1198, 473], [2289, 475], [2291, 887], [1194, 889]]
   # Question_region is preconfigure for a 1920x1080 screen
   # If your screen is not 1920x1080, you will need to change these values manually
   # The larger the screenshot the longer it will take for a response.

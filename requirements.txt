@@ -5,3 +5,5 @@ dotenv
 pytest
 pytest-mock
 openapi
+fastapi
+uvicorn
