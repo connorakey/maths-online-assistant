@@ -164,6 +164,14 @@ def optimize_image_for_openai(
     return
 
 
-screenshot_output = capture_screenshot()
-screenshot_path = answers_dir / screenshot_output
-screenshot_output = optimize_image_for_openai(screenshot_path)
+def encode_image_to_base64(image_path):
+    """Encode an image file to a base64 string.
+
+    Args:
+        image_path (str or Path): Path to the image file."""
+    import base64
+
+    with open(image_path, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
+    log(f"Image encoded to base64 string of length {len(encoded_string)}", "debug")
+    return encoded_string
