@@ -17,13 +17,6 @@ ui:
   # The easiest way to get these values is to use the screenshot tool in the utiliy folder.
   # You can run it with the command `python -m utilities.mouse-position` and it will come back with the coordinates of your mouse each time you click. 
 
-
-system:
-  tesseract_cmd: "/usr/bin/tesseract" # Linux Configuration
-  # tesseract_cmd: "C:\\Program Files\\Tesseract-OCR\\tesseract.exe" # Windows config
-  # /opt/homebrew/bin/tesseract # Apple Silicon MAC
-  # /usr/local/bin/tesseract # Intel based MAC
-
 debug:
   enabled: 1
   level: "debug"
