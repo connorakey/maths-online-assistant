@@ -1,6 +1,6 @@
 from config import OPENAI_API_KEY
 from openai import OpenAI
-from screenshot import encode_image_to_base64
+from .screenshot import encode_image_to_base64
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -18,9 +18,7 @@ def get_step_by_step_guidance(image_path):
             {
                 "role": "system",
                 "content": (
-                    "You are a helpful assistant that guides Year 7 to 10 high school students "
-                    "through their math questions. Instead of giving the direct answer, help them "
-                    "understand the problem and solve it step-by-step using clear and simple explanations suitable for their level."
+                    "You are a helpful assistant that guides Year 7 to 10 high school students, you will help them answer their math questions, you will not provide the final answer, you will only provide step-by-step guidance using clear and simple explanations suitable for their level. You WILL NOT PROVIDE THE FINAL ANSWER!"
                 ),
             },
             {

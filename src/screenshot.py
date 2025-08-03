@@ -163,7 +163,7 @@ def optimize_image_for_openai(
     img.save(output_path, "JPEG", quality=quality, optimize=True)
     log(f"Image optimized and saved to {output_path}", "debug")
 
-    return
+    return output_path
 
 
 def encode_image_to_base64(image_path):

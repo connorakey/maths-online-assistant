@@ -2,6 +2,7 @@ from .screenshot import (
     capture_screenshot,
     optimize_image_for_openai,
     clear_all_screenshots,
+    answers_dir,
 )
 from config import config
 from .debug import log
@@ -41,6 +42,8 @@ def main():
                 screenshot_file = capture_screenshot()
                 log(f"Screenshot captured: {screenshot_file}", "debug")
                 print(f"Screenshot saved as: {screenshot_file}")
+
+                screenshot_file = answers_dir / screenshot_file
 
                 optimized_image = optimize_image_for_openai(screenshot_file)
                 log(f"Optimized image for OpenAI: {optimized_image}", "debug")
