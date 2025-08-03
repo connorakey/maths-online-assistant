@@ -1,3 +1,11 @@
+# src/main.py
+# Template for the main application logic of the Maths Online Assistant.
+# This file serves as the entry point for the application, allowing users to interact with the screenshot functionality,
+# capture screenshots, and retrieve step-by-step guidance and final answers from OpenAI.
+
+# This file is temporary and will be replaced with a more robust implementation in the future.
+
+
 from .screenshot import (
     capture_screenshot,
     optimize_image_for_openai,
