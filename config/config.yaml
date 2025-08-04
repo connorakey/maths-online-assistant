@@ -23,3 +23,8 @@ debug:
   # log_level includes debug, minimal 
   # This edits the logging level.
   # If you do not want to see debug messages, set this to minimal, and if you seriously don't want to see any messages at all (not recommended) set enabled to 0.
+
+api:
+  ip_address: "127.0.0.1"
+  port: 8000
+  token: "your_token"
