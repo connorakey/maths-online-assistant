@@ -41,8 +41,6 @@ def get_final_answer(image_b64):
     if not OPENAI_API_KEY:
         raise ValueError("OpenAI API key is not set.")
 
-    image_b64 = encode_image_to_base64(image_b64)
-
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         max_tokens=512,
