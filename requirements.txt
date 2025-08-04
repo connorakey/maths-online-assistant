@@ -4,6 +4,6 @@ pyautogui
 dotenv
 pytest
 pytest-mock
-openapi
+openai
 fastapi
 uvicorn

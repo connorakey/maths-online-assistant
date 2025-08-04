@@ -6,7 +6,7 @@
 # This file is temporary and will be replaced with a more robust implementation in the future.
 
 
-from .screenshot import (
+from src.shared.screenshot import (
     capture_screenshot,
     optimize_image_for_openai,
     clear_all_screenshots,
@@ -14,7 +14,7 @@ from .screenshot import (
     answers_dir,
 )
 from config import config
-from .debug import log
+from src.shared.debug import log
 from .openai import get_step_by_step_guidance, get_final_answer
 
 import sys

@@ -4,7 +4,7 @@
 
 from config import OPENAI_API_KEY
 from openai import OpenAI
-from .screenshot import encode_image_to_base64
+from src.shared.screenshot import encode_image_to_base64
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
