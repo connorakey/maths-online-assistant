@@ -7,3 +7,7 @@ pytest-mock
 openai
 fastapi
 uvicorn
+PyQt6
+PyQt6-WebEngine
+markdown
+requests
