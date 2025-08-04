@@ -23,6 +23,8 @@ from src.shared.screenshot import (
 
 from config import config
 
+current_image_b64 = None
+
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html>
@@ -164,6 +166,7 @@ class MathsTutorApp(QWidget):
         self.answer_text = "This would really be the answer to your question, but you can click the button above to reveal it."
 
     def take_screenshot(self):
+        global current_image_b64
         # Reset UI to initial state
         self.update_solution("")
         self.answer_text_label.hide()
@@ -174,6 +177,7 @@ class MathsTutorApp(QWidget):
         screenshot_file = answers_dir / screenshot_file
         optimized_image = optimize_image_for_openai(screenshot_file)
         optimized_image = encode_image_to_base64(optimized_image)
+        current_image_b64 = optimized_image
 
         url = f"http://{config["api"]["ip_address"]}:{config["api"]["port"]}/maths-assistant/api"
         data = {
@@ -209,9 +213,23 @@ class MathsTutorApp(QWidget):
         self.solution_view.setHtml(full_html)
 
     def show_answer(self):
-        self.answer_text_label.setText(f"Answer: {self.answer_text}")
-        self.answer_text_label.show()
-        self.reveal_answer_btn.setEnabled(False)
+        global current_image_b64
+        if not current_image_b64:
+            self.answer_text_label.setText(f"Answer: {self.answer_text}")
+            self.answer_text_label.show()
+            self.reveal_answer_btn.setEnabled(False)
+        else:
+            url = f"http://{config['api']['ip_address']}:{config['api']['port']}/maths-assistant/api"
+            data = {
+                "image_b64": current_image_b64,
+                "request_type": "final_answer",
+            }
+            response = requests.post(url, json=data)
+            final_answer = response.json().get("final_answer", "")
+            if not final_answer:
+                final_answer = "No final answer available. Please try again later."
+            self.answer_text_label.setText(f"Answer: {final_answer}")
+            self.answer_text_label.show()
 
 
 def apply_light_palette(app):
