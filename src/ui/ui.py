@@ -181,6 +181,7 @@ class MathsTutorApp(QWidget):
 
         url = f"http://{config["api"]["ip_address"]}:{config["api"]["port"]}/maths-assistant/api"
         data = {
+            "api_key": config["api"]["api_key"],
             "image_b64": optimized_image,
             "request_type": "step_by_step",
         }
@@ -188,9 +189,7 @@ class MathsTutorApp(QWidget):
 
         updated_solution = response.json().get("step_by_step_guidance", "")
         if not updated_solution:
-            updated_solution = (
-                "No step-by-step guidance available. Please try again later."
-            )
+            updated_solution = "No step-by-step guidance available. Please try again later. A common reason for this is that your API key is invalid or not set, please check your config file."
 
         self.screenshot_btn.setText("Take Screenshot")
         self.screenshot_btn.setEnabled(True)
@@ -221,6 +220,7 @@ class MathsTutorApp(QWidget):
         else:
             url = f"http://{config['api']['ip_address']}:{config['api']['port']}/maths-assistant/api"
             data = {
+                "api_key": config["api"]["api_key"],
                 "image_b64": current_image_b64,
                 "request_type": "final_answer",
             }
