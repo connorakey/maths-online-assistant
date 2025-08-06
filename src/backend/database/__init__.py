@@ -16,20 +16,18 @@ except Exception as e:
 DB_FILE = Path(__file__).resolve().parents[3] / "data" / "api_keys.db"
 DB_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-
 def init_db():
-    """(Re)create the API keys table with proper constraints"""
+    """Initialize the API keys table if it does not exist"""
     with sqlite3.connect(DB_FILE) as conn:
         c = conn.cursor()
-        c.execute("DROP TABLE IF EXISTS api_keys")
         c.execute(
             """
-            CREATE TABLE api_keys (
+            CREATE TABLE IF NOT EXISTS api_keys (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 encrypted_key TEXT NOT NULL,
                 key_hash TEXT NOT NULL UNIQUE
             )
-        """
+            """
         )
         conn.commit()
 
