@@ -27,4 +27,4 @@ debug:
 api:
   ip_address: "127.0.0.1"
   port: 8000
-  token: "your_token"
+  api_key: "your_api_key_here"

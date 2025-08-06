@@ -25,4 +25,4 @@ def load_config():
 config = load_config()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-MONGRO_URI = os.getenv("MONGO_URI")
+ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY")
