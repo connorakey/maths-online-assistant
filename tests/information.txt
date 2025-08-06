@@ -1,3 +1,0 @@
-This folder is used to store the tests related to the project.
-This is to ensure that the project is functioning correctly and to catch any potential issues early.
-The tests are run automatically and the results are stored in this folder.

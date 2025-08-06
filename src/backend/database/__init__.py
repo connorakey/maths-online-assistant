@@ -1,9 +1,8 @@
-import os
+
 import sqlite3
 import hashlib
 from pathlib import Path
-from cryptography.fernet import Fernet, InvalidToken
-from dotenv import load_dotenv
+from cryptography.fernet import Fernet
 from config import ENCRYPTION_KEY
 
 if not ENCRYPTION_KEY:
