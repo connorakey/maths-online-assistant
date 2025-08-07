@@ -2,6 +2,9 @@
 # This file handles interactions with the OpenAI API to retrieve step-by-step guidance and final answers for math questions.
 # It encodes images to base64 format and sends them to the OpenAI API for processing.
 
+# TODO
+# Switch model to GPT-4.1
+
 from config import OPENAI_API_KEY
 from openai import OpenAI
 from src.shared.screenshot import encode_image_to_base64
@@ -14,13 +17,13 @@ def get_step_by_step_guidance(image_b64):
         raise ValueError("OpenAI API key is not set.")
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4.1",
         max_tokens=1024,
         messages=[
             {
                 "role": "system",
                 "content": (
-                    "You are a helpful assistant that guides Year 7 to 10 high school students, you will help them answer their math questions you will only provide step-by-step guidance using clear and simple explanations suitable for their level. You WILL NOT PROVIDE THE FINAL ANSWER! AND YOU MUST PROVIDE YOUR RESPONSE ONLY IN PLAIN MARKDOWN FORMAT. Mathematical symbols must be written in MathJax format, and you must not use LaTeX or any other format. "
+                    "You are a helpful assistant that guides Year 7 to 10 high school students, you will help them answer their math questions you will only provide step-by-step guidance using clear and simple explanations suitable for their level. You WILL NOT PROVIDE THE FINAL ANSWER! AND YOU MUST PROVIDE YOUR RESPONSE ONLY IN PLAIN MARKDOWN FORMAT. Math symbols should be in PLAIN text!"
                 ),
             },
             {
@@ -42,13 +45,13 @@ def get_final_answer(image_b64):
         raise ValueError("OpenAI API key is not set.")
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4.1",
         max_tokens=512,
         messages=[
             {
                 "role": "system",
                 "content": (
-                    "You are a helpful assistant that provides the final answer to Year 7 to 10 high school math questions. You are to triple check your answers and ensure they are correct. Do not provide explanations or steps, just the direct answer. The answer must be in MathJax format, not LaTeX or any other format. "
+                    "You are a helpful assistant that guides Year 7 to 10 high school students through math questions. You are to work these questions out step by step and double check your answers, after you have finished this you a to provide ONLY YOUR FINAL ANSWER to the Student, no other junk no thinking just the final answer. You are to respond in PLAIN MARKDOWN! And nothing else, Math Symbols should be in PLAIN text!"
                 ),
             },
             {
