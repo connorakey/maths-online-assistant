@@ -9,7 +9,7 @@ config:
 
 
 ui:
-  question_region: [[1198, 473], [2289, 475], [2291, 887], [1194, 889]]
+  question_region: [[527,407], [1621, 407], [1622, 824], [521, 823]]
   # Question_region is preconfigure for a 1920x1080 screen
   # If your screen is not 1920x1080, you will need to change these values manually
   # The larger the screenshot the longer it will take for a response.
@@ -27,4 +27,4 @@ debug:
 api:
   ip_address: "127.0.0.1"
   port: 8000
-  api_key: "your_api_key_here"
+  api_key: "ek9Sa8eV31OqKhlN2sZr"
