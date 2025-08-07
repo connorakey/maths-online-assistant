@@ -26,3 +26,4 @@ config = load_config()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY")
+ROOT_API_KEY = os.getenv("ROOT_API_KEY")

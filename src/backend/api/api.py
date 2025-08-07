@@ -1,4 +1,4 @@
-from config import OPENAI_API_KEY
+from config import OPENAI_API_KEY, ROOT_API_KEY
 from src.backend.openai import get_step_by_step_guidance, get_final_answer
 from src.backend.database import init_db, check_api_key, add_api_key as db_add_api_key
 
@@ -20,6 +20,7 @@ class MathsAssistantRequest(BaseModel):
 
 class AddApiKeyRequest(BaseModel):
     api_key: str
+    root_api_key: str
 
 
 # Initialize DB once at startup
@@ -58,13 +59,14 @@ async def maths_assistant_api(request: MathsAssistantRequest):
 
 @app.post("/maths-assistant/api/add-key")
 async def add_api_key_route(request: AddApiKeyRequest):
-    if not request.api_key or not request.api_key.strip():
-        raise HTTPException(status_code=400, detail="API key cannot be empty.")
+    if request.root_api_key == ROOT_API_KEY:
+        if not request.api_key or not request.api_key.strip():
+            raise HTTPException(status_code=400, detail="API key cannot be empty.")
 
-    if db_add_api_key(request.api_key):
-        return {"message": "API key added successfully."}
-    else:
-        raise HTTPException(status_code=409, detail="API key already exists.")
+        if db_add_api_key(request.api_key):
+            return {"message": "API key added successfully."}
+        else:
+            raise HTTPException(status_code=409, detail="API key already exists.")
 
 
 if __name__ == "__main__":
