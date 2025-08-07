@@ -36,8 +36,6 @@ answers_dir = screenshots / "answers"
 
 random_letters = 12
 
-workspace.mkdir(parent=True, exist_ok=True)
-
 questions_dir.mkdir(parents=True, exist_ok=True)
 answers_dir.mkdir(parents=True, exist_ok=True)
 cache_dir.mkdir(parents=True, exist_ok=True)
