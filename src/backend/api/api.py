@@ -2,9 +2,15 @@ from config import OPENAI_API_KEY, ROOT_API_KEY
 from src.backend.openai import get_step_by_step_guidance, get_final_answer
 from src.backend.database import init_db, check_api_key, add_api_key as db_add_api_key
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 from enum import Enum
+
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
+
+import json
 
 
 class RequestType(str, Enum):
@@ -26,31 +32,49 @@ class AddApiKeyRequest(BaseModel):
 # Initialize DB once at startup
 init_db()
 
+
+async def get_api_key_identifier(request: Request):
+    try:
+        body_bytes = await request.body()
+        body = json.loads(body_bytes.decode("utf-8"))
+        return body.get("api_key", "anonymous")
+    except Exception:
+        return "anonymous"
+
+
+limiter = Limiter(key_func=get_api_key_identifier)
 app = FastAPI()
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
 @app.post("/maths-assistant/api")
-async def maths_assistant_api(request: MathsAssistantRequest):
+@limiter.limit("5/minute") # Ratelimiting based on API Key
+async def maths_assistant_api(request: Request):
+    body = await request.json()
+    api_key = body.get("api_key")
+    image_b64 = body.get("image_b64")
+    request_type = body.get("request_type")
+
     if not OPENAI_API_KEY:
         raise HTTPException(
             status_code=500,
             detail="OpenAI API key is not set. Please contact the server administrator.",
         )
 
-    if not check_api_key(request.api_key):
+    if not check_api_key(api_key):
         raise HTTPException(
             status_code=401, detail="Invalid API key. Please provide a valid key."
         )
 
-    if request.request_type == RequestType.step_by_step:
-        guidance = get_step_by_step_guidance(request.image_b64)
+    if request_type == RequestType.step_by_step:
+        guidance = get_step_by_step_guidance(image_b64)
         return {"step_by_step_guidance": guidance}
 
-    elif request.request_type == RequestType.final_answer:
-        final_answer = get_final_answer(request.image_b64)
+    elif request_type == RequestType.final_answer:
+        final_answer = get_final_answer(image_b64)
         return {"final_answer": final_answer}
 
-    # This is just a fallback; RequestType enforces this already.
     raise HTTPException(
         status_code=400,
         detail="Invalid request type. Use 'step_by_step' or 'final_answer'.",
@@ -58,6 +82,7 @@ async def maths_assistant_api(request: MathsAssistantRequest):
 
 
 @app.post("/maths-assistant/api/add-key")
+@limiter.limit("2/minute", key_func=get_remote_address) # Ratelimiting based on IP Address
 async def add_api_key_route(request: AddApiKeyRequest):
     if request.root_api_key == ROOT_API_KEY:
         if not request.api_key or not request.api_key.strip():
@@ -71,5 +96,4 @@ async def add_api_key_route(request: AddApiKeyRequest):
 
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run(app, host="127.0.0.1", port=8000)
