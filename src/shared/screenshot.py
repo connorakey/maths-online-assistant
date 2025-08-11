@@ -31,12 +31,10 @@ workspace = Path("workspace")
 cache_dir = workspace / "cache"
 screenshots = workspace / "screenshots"
 
-questions_dir = screenshots / "questions"
 answers_dir = screenshots / "answers"
 
 random_letters = 12
 
-questions_dir.mkdir(parents=True, exist_ok=True)
 answers_dir.mkdir(parents=True, exist_ok=True)
 cache_dir.mkdir(parents=True, exist_ok=True)
 
@@ -113,7 +111,7 @@ def clear_all_screenshots():
         bool: True if all deletions succeeded, False if any deletion failed.
     """
     success = True
-    for path in [questions_dir, answers_dir]:
+    for path in [answers_dir]:
         if not path.exists() or not path.is_dir():
             log(f"Path {path} does not exist or is not a directory.", "minimal")
             continue
