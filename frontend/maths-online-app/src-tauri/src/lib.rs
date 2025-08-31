@@ -6,6 +6,8 @@ pub fn run() {
   tauri::Builder::default()
     .invoke_handler(tauri::generate_handler![
       screenshot::capture_screenshot,
+      request::send_openai_request,
+      request::test_api_connection,
     ])
     .setup(|app| {
       if cfg!(debug_assertions) {
