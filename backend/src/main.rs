@@ -1,4 +1,4 @@
-use axum::{routing::post, Json, Router, http::StatusCode, response::{Response, IntoResponse}};
+use axum::{routing::post, Json, Router, http::StatusCode};
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use backend::openai::{get_step_by_step_guidance, get_final_answer};
