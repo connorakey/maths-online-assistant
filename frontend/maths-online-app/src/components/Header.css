@@ -1,0 +1,226 @@
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Left Section - Logo and Title */
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.logo-icon:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.app-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* Navigation Section */
+.header-nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 8px;
+}
+
+.nav-item {
+  margin: 0;
+}
+
+.nav-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.nav-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.nav-button.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 1rem;
+}
+
+/* Right Section - User and Actions */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+}
+
+.user-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.user-avatar {
+  font-size: 1.1rem;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-container {
+    padding: 0 16px;
+  }
+  
+  .app-title {
+    font-size: 1.25rem;
+  }
+  
+  .nav-button span:not(.nav-icon) {
+    display: none;
+  }
+  
+  .nav-button {
+    padding: 8px;
+  }
+  
+  .user-name {
+    display: none;
+  }
+  
+  .user-button {
+    padding: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    height: 56px;
+  }
+  
+  .header-container {
+    padding: 0 12px;
+  }
+  
+  .app-title {
+    font-size: 1.1rem;
+  }
+  
+  .header-actions {
+    gap: 4px;
+  }
+  
+  .action-button {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+}
