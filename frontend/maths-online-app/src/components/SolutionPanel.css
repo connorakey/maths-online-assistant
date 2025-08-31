@@ -1,0 +1,255 @@
+/* Solution Panel Component Styles */
+.solution-panel-container {
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.solution-panel {
+  width: 100%;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.solution-panel:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+/* Empty State */
+.solution-panel.empty {
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.empty-icon {
+  color: #9ca3af;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.empty-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.empty-description {
+  font-size: 1rem;
+  color: #6b7280;
+  max-width: 400px;
+  line-height: 1.6;
+}
+
+/* Solution Header */
+.solution-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.solution-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Solution Content */
+.solution-content {
+  padding: 2rem;
+  min-height: 200px;
+}
+
+/* Loading Content */
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 200px;
+}
+
+.loading-text p {
+  font-size: 1.1rem;
+  color: #4b5563;
+  margin: 0.5rem 0;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.loading-text p:nth-child(1) { animation-delay: 0s; }
+.loading-text p:nth-child(2) { animation-delay: 0.3s; }
+.loading-text p:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Error Content */
+.error-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.error-icon {
+  font-size: 2rem;
+  color: #dc2626;
+}
+
+.error-text h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #dc2626;
+  margin: 0 0 0.5rem 0;
+}
+
+.error-text p {
+  color: #7f1d1d;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Solution Text */
+.solution-text {
+  line-height: 1.8;
+  font-size: 1rem;
+  color: #374151;
+}
+
+.solution-line {
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+  transition: all 0.2s ease;
+}
+
+.solution-line.step {
+  font-weight: 600;
+  color: #1e40af;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
+  border-radius: 8px;
+  border-left: 4px solid #2563eb;
+  margin: 1rem 0;
+}
+
+.solution-line.header {
+  font-weight: 700;
+  color: #1f2937;
+  font-size: 1.1rem;
+  margin: 1.5rem 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.solution-spacer {
+  height: 0.5rem;
+}
+
+.solution-line:empty {
+  margin-bottom: 0.5rem;
+}
+
+/* Math expressions and emphasis */
+.solution-line:has(strong) {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .solution-content {
+    padding: 1.5rem;
+  }
+  
+  .solution-header {
+    padding: 1rem 1.5rem;
+  }
+  
+  .solution-title {
+    font-size: 1.3rem;
+  }
+  
+  .empty-state {
+    padding: 3rem 1.5rem;
+  }
+  
+  .empty-title {
+    font-size: 1.3rem;
+  }
+  
+  .empty-description {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .solution-content {
+    padding: 1rem;
+  }
+  
+  .solution-header {
+    padding: 1rem;
+  }
+  
+  .error-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .loading-text p {
+    font-size: 1rem;
+  }
+}
