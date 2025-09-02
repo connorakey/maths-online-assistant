@@ -1,0 +1,150 @@
+/* Upload Box Component Styles */
+.upload-box-container {
+  margin: 2rem 0;
+}
+
+.upload-box {
+  border: 2px dashed #d1d5db;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  animation: uploadBoxSlideIn 0.6s ease-out;
+}
+
+@keyframes uploadBoxSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.upload-box:hover {
+  border-color: #2563eb;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
+}
+
+.upload-box.drag-over {
+  border-color: #2563eb;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  transform: scale(1.02);
+  box-shadow: 0 12px 40px rgba(37, 99, 235, 0.25);
+}
+
+.upload-box.uploading {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.upload-icon {
+  color: #6b7280;
+  transition: color 0.3s ease;
+}
+
+.upload-box:hover .upload-icon {
+  color: #3b82f6;
+}
+
+.upload-box.drag-over .upload-icon {
+  color: #3b82f6;
+  transform: scale(1.1);
+}
+
+.upload-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.upload-description {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.upload-hint {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* Loading State */
+.upload-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.upload-loading p {
+  color: #6b7280;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .upload-box {
+    padding: 2rem 1rem;
+  }
+  
+  .upload-title {
+    font-size: 1.25rem;
+  }
+  
+  .upload-description {
+    font-size: 0.9rem;
+  }
+  
+  .upload-hint {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .upload-box {
+    padding: 1.5rem 1rem;
+  }
+  
+  .upload-icon svg {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .upload-title {
+    font-size: 1.1rem;
+  }
+}
