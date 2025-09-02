@@ -89,6 +89,7 @@ const MathQuestionForm: React.FC<MathQuestionFormProps> = ({ onSubmit }) => {
             <UploadBox 
               onImageUpload={handleImageUpload}
               onError={handleUploadError}
+              isUploaded={!!uploadedImage}
             />
           </div>
         )}
