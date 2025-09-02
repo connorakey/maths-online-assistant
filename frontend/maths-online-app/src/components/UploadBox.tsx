@@ -4,9 +4,10 @@ import './UploadBox.css';
 interface UploadBoxProps {
   onImageUpload: (base64Data: string) => void;
   onError?: (error: string) => void;
+  isUploaded?: boolean;
 }
 
-const UploadBox: React.FC<UploadBoxProps> = ({ onImageUpload, onError }) => {
+const UploadBox: React.FC<UploadBoxProps> = ({ onImageUpload, onError, isUploaded = false }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -17,8 +18,8 @@ const UploadBox: React.FC<UploadBoxProps> = ({ onImageUpload, onError }) => {
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) { // 10MB limit
-      onError?.('File size must be less than 10MB');
+    if (file.size > 50 * 1024 * 1024) { // 50MB limit
+      onError?.('File size must be less than 50MB');
       return;
     }
 
@@ -75,7 +76,7 @@ const UploadBox: React.FC<UploadBoxProps> = ({ onImageUpload, onError }) => {
   return (
     <div className="upload-box-container">
       <div
-        className={`upload-box ${isDragOver ? 'drag-over' : ''} ${isUploading ? 'uploading' : ''}`}
+        className={`upload-box ${isDragOver ? 'drag-over' : ''} ${isUploading ? 'uploading' : ''} ${isUploaded ? 'success' : ''}`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -95,6 +96,21 @@ const UploadBox: React.FC<UploadBoxProps> = ({ onImageUpload, onError }) => {
               <div className="spinner"></div>
               <p>Processing image...</p>
             </div>
+          ) : isUploaded ? (
+            <div className="upload-success">
+              <div className="success-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor"/>
+                </svg>
+              </div>
+              <h3 className="upload-title">Image Uploaded!</h3>
+              <p className="upload-description">
+                Ready to solve your math question
+              </p>
+              <p className="upload-hint">
+                Click to upload a different image
+              </p>
+            </div>
           ) : (
             <>
               <div className="upload-icon">
@@ -107,7 +123,7 @@ const UploadBox: React.FC<UploadBoxProps> = ({ onImageUpload, onError }) => {
                 Drag and drop your PNG image here, or click to browse
               </p>
               <p className="upload-hint">
-                Supports PNG, JPG, JPEG • Max 10MB
+                Supports PNG, JPG, JPEG • Max 50MB
               </p>
             </>
           )}
