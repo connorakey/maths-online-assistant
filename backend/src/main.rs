@@ -1,4 +1,4 @@
-use axum::{routing::post, Json, Router, http::StatusCode};
+use axum::{routing::post, Json, Router, http::StatusCode, extract::DefaultBodyLimit};
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use backend::openai::{get_step_by_step_guidance, get_final_answer};
@@ -49,7 +49,8 @@ async fn main() {
 
     let app = Router::new()
         .route("/api/openai", post(openai))
-        .route("/admin/add_api_key", post(add_api_key));
+        .route("/admin/add_api_key", post(add_api_key))
+        .layer(DefaultBodyLimit::max(100 * 1024 * 1024)); // 100MB limit
 
     // Get port from environment variable, default to 3000 if not set
     let port = std::env::var("PORT").unwrap_or_else(|_| "3000".to_string());
