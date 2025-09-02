@@ -1,6 +1,0 @@
-This folder is used to store screenshots related to the project.
-This includes images of the questions to send to AI, as well as other relevant screenshots.
-When the program is not running, this folder is entirely empty.
-When the program is running, it will be populated with screenshots of the questions and answers.
-If there is items in this folder, it is likely that the program is running. Or if the program isn't running, it is likely that the program has crashed.
-If you are certain that the program is not running, you can delete the contents of this folder to free up space.
