@@ -1,7 +1,11 @@
 import React from 'react';
 import './Header.css';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onSettingsClick?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onSettingsClick }) => {
   return (
     <header className="app-header">
       <div className="header-container">
@@ -27,7 +31,7 @@ const Header: React.FC = () => {
                 </button>
               </li>
               <li className="nav-item">
-                <button className="nav-button">
+                <button className="nav-button" onClick={onSettingsClick}>
                   <span className="nav-icon">⚙️</span>
                   <span>Settings</span>
                 </button>

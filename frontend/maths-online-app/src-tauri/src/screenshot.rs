@@ -58,6 +58,7 @@ fn capture_and_optimize_screenshot(area: ScreenshotArea) -> Result<String, Strin
     Ok(base64_data)
 }
 
+#[tauri::command]
 pub fn optimize_and_encode(img: DynamicImage) -> Result<String, String> {
     let optimized = optimize_image(img);
     image_to_base64_optimized(optimized)
