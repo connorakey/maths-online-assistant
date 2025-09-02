@@ -17,6 +17,14 @@ pub struct OpenAiRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OpenAiRequestWithUrl {
+    pub image_b64: String,
+    pub api_key: String,
+    pub request_type: OpenAiRequestType,
+    pub base_url: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OpenAiResponse {
     pub success: bool,
     pub response: String,

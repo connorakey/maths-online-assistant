@@ -10,9 +10,9 @@ export interface ScreenshotCoordinates {
 }
 
 export interface SettingsData {
-  apiKey: string;
+  api_key: string;
   screenshot_coords: ScreenshotCoordinates;
-  baseUrl: string;
+  base_url: string;
 }
 
 interface SettingsProps {
@@ -21,25 +21,25 @@ interface SettingsProps {
 
 const Settings: React.FC<SettingsProps> = ({ onClose }) => {
   const [settings, setSettings] = useState<SettingsData>({
-    apiKey: '',
+    api_key: '',
     screenshot_coords: { x1: 0, y1: 0, x2: 100, y2: 100 },
-    baseUrl: 'http://localhost:8080'
+    base_url: 'http://localhost:3000'
   });
 
-  const [passwords, setPasswords] = useState({
-    apiKey: '',
-    screenshotCoords: ''
-  });
-
-  const [showSettings, setShowSettings] = useState({
-    apiKey: false,
-    screenshotCoords: false
-  });
-
+  const [adminPassword, setAdminPassword] = useState('');
+  const [isUnlocked, setIsUnlocked] = useState(false);
   const [tempSettings, setTempSettings] = useState<SettingsData>(settings);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  
+  // Password change state
+  const [showPasswordChange, setShowPasswordChange] = useState(false);
+  const [passwordChange, setPasswordChange] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
 
   useEffect(() => {
     loadSettings();
@@ -59,10 +59,11 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
     }
   };
 
-  const verifyPassword = async (section: 'apiKey' | 'screenshotCoords', password: string): Promise<boolean> => {
+  const verifyAdminPassword = async (password: string): Promise<boolean> => {
     try {
+      // Try to verify with any section - if admin password works for one, it works for all
       const isValid = await invoke<boolean>('verify_settings_password', { 
-        section, 
+        section: 'apiKey', 
         password 
       });
       return isValid;
@@ -72,21 +73,21 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
     }
   };
 
-  const handleUnlock = async (section: 'apiKey' | 'screenshotCoords') => {
-    const password = passwords[section];
-    if (!password) {
-      setError('Please enter a password');
+  const handleUnlock = async () => {
+    if (!adminPassword) {
+      setError('Please enter the admin password');
       return;
     }
 
     setError('');
-    const isValid = await verifyPassword(section, password);
+    const isValid = await verifyAdminPassword(adminPassword);
     
     if (isValid) {
-      setShowSettings(prev => ({ ...prev, [section]: true }));
-      setSuccess(`${section === 'apiKey' ? 'API Key' : 'Screenshot Coordinates'} section unlocked`);
+      setIsUnlocked(true);
+      setSuccess('Settings unlocked successfully!');
+      setAdminPassword(''); // Clear password for security
     } else {
-      setError('Invalid password');
+      setError('Invalid admin password');
     }
   };
 
@@ -95,19 +96,9 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
       setIsLoading(true);
       setError('');
       
-      // Only save sections that are unlocked
-      const sectionsToSave: string[] = [];
-      if (showSettings.apiKey) sectionsToSave.push('apiKey');
-      if (showSettings.screenshotCoords) sectionsToSave.push('screenshotCoords');
-
-      if (sectionsToSave.length === 0) {
-        setError('No sections are unlocked for saving');
-        return;
-      }
-
       await invoke('save_settings', { 
         settings: tempSettings,
-        unlockedSections: sectionsToSave
+        unlockedSections: ['apiKey', 'screenshotCoords'] // Admin can save all sections
       });
       
       setSettings(tempSettings);
@@ -136,6 +127,52 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
     }));
   };
 
+  const handlePasswordChange = async () => {
+    if (!passwordChange.currentPassword || !passwordChange.newPassword || !passwordChange.confirmPassword) {
+      setError('Please fill in all password fields');
+      return;
+    }
+
+    if (passwordChange.newPassword !== passwordChange.confirmPassword) {
+      setError('New passwords do not match');
+      return;
+    }
+
+    if (passwordChange.newPassword.length < 6) {
+      setError('New password must be at least 6 characters long');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError('');
+
+      await invoke('change_settings_password', {
+        section: 'apiKey', // Using apiKey section since we have unified password
+        oldPassword: passwordChange.currentPassword,
+        newPassword: passwordChange.newPassword
+      });
+
+      setSuccess('Master password changed successfully!');
+      setPasswordChange({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
+      setShowPasswordChange(false);
+
+      // Auto-close settings after password change
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to change password:', err);
+      setError(`Failed to change password: ${err}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const clearMessages = () => {
     setError('');
     setSuccess('');
@@ -151,6 +188,51 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
     );
   }
 
+  // Show unlock screen if not unlocked
+  if (!isUnlocked) {
+    return (
+      <div className="settings-overlay">
+        <div className="settings-modal">
+          <div className="settings-header">
+            <h2>Settings</h2>
+            <button className="close-button" onClick={onClose}>×</button>
+          </div>
+          
+          <div className="settings-content">
+            <div className="unlock-section">
+              <h3>🔒 Admin Access Required</h3>
+              <p>Enter the admin password to access settings</p>
+              
+              {error && (
+                <div className="error-message">
+                  {error}
+                  <button className="clear-message" onClick={clearMessages}>×</button>
+                </div>
+              )}
+              
+              <div className="password-input">
+                <input
+                  type="password"
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleUnlock()}
+                  placeholder="Enter admin password"
+                  autoFocus
+                />
+                <button onClick={handleUnlock}>Unlock Settings</button>
+              </div>
+              
+              <small className="help-text">
+                Default password: <code>admin123</code>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show settings when unlocked
   return (
     <div className="settings-overlay">
       <div className="settings-modal">
@@ -174,112 +256,138 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
             </div>
           )}
 
-          {/* Base URL Setting (No password protection) */}
+          {/* Base URL Setting */}
           <div className="setting-section">
             <h3>Backend URL</h3>
             <div className="setting-field">
-              <label htmlFor="baseUrl">Server URL:</label>
+              <label htmlFor="base_url">Server URL:</label>
               <input
-                id="baseUrl"
+                id="base_url"
                 type="text"
-                value={tempSettings.baseUrl}
-                onChange={(e) => setTempSettings(prev => ({ ...prev, baseUrl: e.target.value }))}
-                placeholder="http://localhost:8080"
+                value={tempSettings.base_url}
+                onChange={(e) => setTempSettings(prev => ({ ...prev, base_url: e.target.value }))}
+                placeholder="http://localhost:3000"
               />
+              <small>URL where your backend server is running</small>
             </div>
           </div>
 
           {/* API Key Setting */}
           <div className="setting-section">
             <h3>OpenAI API Key</h3>
-            {!showSettings.apiKey ? (
-              <div className="locked-section">
-                <p>🔒 This section is password protected</p>
-                <div className="password-input">
-                  <input
-                    type="password"
-                    placeholder="Enter password to view/edit API key"
-                    value={passwords.apiKey}
-                    onChange={(e) => setPasswords(prev => ({ ...prev, apiKey: e.target.value }))}
-                    onKeyPress={(e) => e.key === 'Enter' && handleUnlock('apiKey')}
-                  />
-                  <button onClick={() => handleUnlock('apiKey')}>Unlock</button>
-                </div>
-              </div>
-            ) : (
-              <div className="setting-field">
-                <label htmlFor="apiKey">API Key:</label>
-                <input
-                  id="apiKey"
-                  type="password"
-                  value={tempSettings.apiKey}
-                  onChange={(e) => setTempSettings(prev => ({ ...prev, apiKey: e.target.value }))}
-                  placeholder="Enter your OpenAI API key"
-                />
-                <small>Your API key is stored securely and only used for making requests.</small>
-              </div>
-            )}
+            <div className="setting-field">
+              <label htmlFor="api_key">API Key:</label>
+              <input
+                id="api_key"
+                type="password"
+                value={tempSettings.api_key}
+                onChange={(e) => setTempSettings(prev => ({ ...prev, api_key: e.target.value }))}
+                placeholder="Enter your OpenAI API key"
+              />
+              <small>Your API key is stored securely and only used for making requests</small>
+            </div>
           </div>
 
           {/* Screenshot Coordinates Setting */}
           <div className="setting-section">
             <h3>Screenshot Coordinates</h3>
-            {!showSettings.screenshotCoords ? (
-              <div className="locked-section">
-                <p>🔒 This section is password protected</p>
-                <div className="password-input">
-                  <input
-                    type="password"
-                    placeholder="Enter password to view/edit coordinates"
-                    value={passwords.screenshotCoords}
-                    onChange={(e) => setPasswords(prev => ({ ...prev, screenshotCoords: e.target.value }))}
-                    onKeyPress={(e) => e.key === 'Enter' && handleUnlock('screenshotCoords')}
-                  />
-                  <button onClick={() => handleUnlock('screenshotCoords')}>Unlock</button>
-                </div>
+            <div className="coordinates-grid">
+              <div className="coordinate-field">
+                <label htmlFor="x1">Top-Left X:</label>
+                <input
+                  id="x1"
+                  type="number"
+                  value={tempSettings.screenshot_coords.x1}
+                  onChange={(e) => handleCoordinateChange('x1', e.target.value)}
+                />
               </div>
-            ) : (
-              <div className="coordinates-grid">
-                <div className="coordinate-field">
-                  <label htmlFor="x1">Top-Left X:</label>
+              <div className="coordinate-field">
+                <label htmlFor="y1">Top-Left Y:</label>
+                <input
+                  id="y1"
+                  type="number"
+                  value={tempSettings.screenshot_coords.y1}
+                  onChange={(e) => handleCoordinateChange('y1', e.target.value)}
+                />
+              </div>
+              <div className="coordinate-field">
+                <label htmlFor="x2">Bottom-Right X:</label>
+                <input
+                  id="x2"
+                  type="number"
+                  value={tempSettings.screenshot_coords.x2}
+                  onChange={(e) => handleCoordinateChange('x2', e.target.value)}
+                />
+              </div>
+              <div className="coordinate-field">
+                <label htmlFor="y2">Bottom-Right Y:</label>
+                <input
+                  id="y2"
+                  type="number"
+                  value={tempSettings.screenshot_coords.y2}
+                  onChange={(e) => handleCoordinateChange('y2', e.target.value)}
+                />
+              </div>
+              <small className="coordinates-help">
+                These coordinates define the screenshot area. 
+                Set 4 points to capture the exact region of your screen.
+              </small>
+            </div>
+          </div>
+
+          {/* Password Management Section */}
+          <div className="setting-section">
+            <h3>Security</h3>
+            <div className="setting-field">
+              <button 
+                className="secondary-button"
+                onClick={() => setShowPasswordChange(!showPasswordChange)}
+              >
+                {showPasswordChange ? 'Cancel Password Change' : 'Change Master Password'}
+              </button>
+            </div>
+
+            {showPasswordChange && (
+              <div className="password-change-section">
+                <div className="setting-field">
+                  <label htmlFor="current-password">Current Password:</label>
                   <input
-                    id="x1"
-                    type="number"
-                    value={tempSettings.screenshot_coords.x1}
-                    onChange={(e) => handleCoordinateChange('x1', e.target.value)}
+                    id="current-password"
+                    type="password"
+                    value={passwordChange.currentPassword}
+                    onChange={(e) => setPasswordChange(prev => ({ ...prev, currentPassword: e.target.value }))}
+                    placeholder="Enter current master password"
                   />
                 </div>
-                <div className="coordinate-field">
-                  <label htmlFor="y1">Top-Left Y:</label>
+                <div className="setting-field">
+                  <label htmlFor="new-password">New Password:</label>
                   <input
-                    id="y1"
-                    type="number"
-                    value={tempSettings.screenshot_coords.y1}
-                    onChange={(e) => handleCoordinateChange('y1', e.target.value)}
+                    id="new-password"
+                    type="password"
+                    value={passwordChange.newPassword}
+                    onChange={(e) => setPasswordChange(prev => ({ ...prev, newPassword: e.target.value }))}
+                    placeholder="Enter new password (min 6 characters)"
                   />
                 </div>
-                <div className="coordinate-field">
-                  <label htmlFor="x2">Bottom-Right X:</label>
+                <div className="setting-field">
+                  <label htmlFor="confirm-password">Confirm New Password:</label>
                   <input
-                    id="x2"
-                    type="number"
-                    value={tempSettings.screenshot_coords.x2}
-                    onChange={(e) => handleCoordinateChange('x2', e.target.value)}
+                    id="confirm-password"
+                    type="password"
+                    value={passwordChange.confirmPassword}
+                    onChange={(e) => setPasswordChange(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                    placeholder="Confirm new password"
                   />
                 </div>
-                <div className="coordinate-field">
-                  <label htmlFor="y2">Bottom-Right Y:</label>
-                  <input
-                    id="y2"
-                    type="number"
-                    value={tempSettings.screenshot_coords.y2}
-                    onChange={(e) => handleCoordinateChange('y2', e.target.value)}
-                  />
+                <div className="password-change-actions">
+                  <button 
+                    className="primary-button"
+                    onClick={handlePasswordChange}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Changing...' : 'Change Password'}
+                  </button>
                 </div>
-                <small className="coordinates-help">
-                  These coordinates define the screenshot area. 
-                  Set 4 points to capture the exact region of your screen.
-                </small>
               </div>
             )}
           </div>
@@ -288,9 +396,9 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
         <div className="settings-footer">
           <button className="cancel-button" onClick={onClose}>Cancel</button>
           <button 
-            className="save-button" 
+            className="save-button primary" 
             onClick={handleSave} 
-            disabled={isLoading || (!showSettings.apiKey && !showSettings.screenshotCoords)}
+            disabled={isLoading}
           >
             {isLoading ? 'Saving...' : 'Save Settings'}
           </button>

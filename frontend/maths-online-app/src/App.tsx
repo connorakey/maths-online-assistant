@@ -38,10 +38,41 @@ function App() {
       if (screenshotResult.success) {
         // Process the screenshot with AI
         console.log('Screenshot captured successfully, processing with AI...');
-        // TODO: Send to AI for processing
-        setSolutionData({
-          solution: `Step-by-Step Solution (Screenshot Mode):\n\nScreenshot captured from coordinates (${coordinates.x1}, ${coordinates.y1}) to (${coordinates.x2}, ${coordinates.y2})\n\n1. First, identify the problem type...\n2. Apply the appropriate formula...\n3. Solve step by step...\n4. Check your answer.`
-        });
+        
+        // Get settings for API configuration
+        const settings = await invoke<{
+          base_url: string;
+          api_key: string;
+        }>('get_settings');
+        
+        console.log('Settings loaded:', settings);
+        
+        // Send to backend for processing
+        const requestParams = {
+          request: {
+            image_b64: screenshotResult.base64_data,
+            api_key: settings.api_key,
+            request_type: 'StepByStep'
+          },
+          baseUrl: settings.base_url
+        };
+        
+        console.log('Sending request with params:', requestParams);
+        
+        const apiResponse = await invoke<{
+          success: boolean;
+          response: string;
+        }>('send_openai_request', requestParams);
+        
+        if (apiResponse.success) {
+          setSolutionData({
+            solution: apiResponse.response
+          });
+        } else {
+          setSolutionData({
+            error: `API request failed: ${apiResponse.response}`
+          });
+        }
       } else {
         setSolutionData({
           error: `Screenshot failed: ${screenshotResult.error || 'Unknown error'}`
@@ -55,7 +86,7 @@ function App() {
     }
   };
 
-  const handleFormSubmit = (data: {
+  const handleFormSubmit = async (data: {
     requestType: RequestType;
     imageData?: string;
     useScreenshot: boolean;
@@ -69,22 +100,58 @@ function App() {
     // Set loading state
     setSolutionData({ isLoading: true });
 
-    if (data.useScreenshot) {
-      // Handle screenshot mode
-      console.log('Taking screenshot...');
-      handleScreenshotMode();
-    } else if (data.imageData) {
-      // Handle uploaded image
-      console.log('Processing uploaded image...');
-      // TODO: Implement image processing
-      // invoke('process_uploaded_image', { base64Input: data.imageData })
-      
-      // For now, simulate loading
-      setTimeout(() => {
-        setSolutionData({
-          solution: `Step-by-Step Solution (Upload Mode):\n\n1. Analyzing uploaded image...\n2. Identifying mathematical expressions...\n3. Applying solution method...\n4. Final answer: [Solution will appear here]`
-        });
-      }, 3000);
+    try {
+      if (data.useScreenshot) {
+        // Handle screenshot mode
+        console.log('Taking screenshot...');
+        await handleScreenshotMode();
+      } else if (data.imageData) {
+        // Handle uploaded image
+        console.log('Processing uploaded image...');
+        
+        // Get settings for API configuration
+        const settings = await invoke<{
+          base_url: string;
+          api_key: string;
+        }>('get_settings');
+        
+        console.log('Settings loaded for upload:', settings);
+        
+        // Determine request type based on form selection
+        const requestType = data.requestType === RequestType.StepByStep ? 'StepByStep' : 'FinalAnswer';
+        
+        // Send to backend for processing
+        const requestParams = {
+          request: {
+            image_b64: data.imageData,
+            api_key: settings.api_key,
+            request_type: requestType
+          },
+          baseUrl: settings.base_url
+        };
+        
+        console.log('Sending upload request with params:', requestParams);
+        
+        const apiResponse = await invoke<{
+          success: boolean;
+          response: string;
+        }>('send_openai_request', requestParams);
+        
+        if (apiResponse.success) {
+          setSolutionData({
+            solution: apiResponse.response
+          });
+        } else {
+          setSolutionData({
+            error: `API request failed: ${apiResponse.response}`
+          });
+        }
+      }
+    } catch (error) {
+      console.error('API request error:', error);
+      setSolutionData({
+        error: `Failed to process request: ${error}`
+      });
     }
   };
 

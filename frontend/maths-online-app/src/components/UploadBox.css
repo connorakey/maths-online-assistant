@@ -4,16 +4,17 @@
 }
 
 .upload-box {
-  border: 2px dashed #d1d5db;
+  border: 2px dashed var(--border-color);
   border-radius: 16px;
   padding: 3rem 2rem;
   text-align: center;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
   animation: uploadBoxSlideIn 0.6s ease-out;
+  backdrop-filter: blur(10px);
 }
 
 @keyframes uploadBoxSlideIn {
@@ -28,17 +29,32 @@
 }
 
 .upload-box:hover {
-  border-color: #2563eb;
-  background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
+  border-color: var(--accent-primary);
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
 }
 
 .upload-box.drag-over {
-  border-color: #2563eb;
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border-color: var(--accent-primary);
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
   transform: scale(1.02);
-  box-shadow: 0 12px 40px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.3);
+}
+
+/* Success state */
+.upload-box.success {
+  border: 2px solid var(--success-color);
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.1) 0%, 
+    rgba(34, 197, 94, 0.05) 100%);
+  animation: successPulse 0.5s ease-out;
+}
+
+@keyframes successPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
 }
 
 .upload-box.uploading {
@@ -54,37 +70,62 @@
 }
 
 .upload-icon {
-  color: #6b7280;
-  transition: color 0.3s ease;
+  color: var(--text-muted);
+  transition: all 0.3s ease;
 }
 
 .upload-box:hover .upload-icon {
-  color: #3b82f6;
+  color: var(--accent-primary);
 }
 
 .upload-box.drag-over .upload-icon {
-  color: #3b82f6;
+  color: var(--accent-primary);
   transform: scale(1.1);
+}
+
+/* Success icon styling */
+.success-icon {
+  color: var(--success-color);
+  transition: all 0.3s ease;
+  animation: checkmark-bounce 0.6s ease-out;
+}
+
+@keyframes checkmark-bounce {
+  0% { 
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% { 
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .upload-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-primary);
   margin: 0;
+  transition: color 0.3s ease;
 }
 
 .upload-description {
   font-size: 1rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin: 0;
   line-height: 1.5;
+  transition: color 0.3s ease;
 }
 
 .upload-hint {
   font-size: 0.875rem;
-  color: #9ca3af;
+  color: var(--text-muted);
   margin: 0;
+  transition: color 0.3s ease;
 }
 
 /* Loading State */
@@ -98,8 +139,8 @@
 .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #e5e7eb;
-  border-top: 3px solid #3b82f6;
+  border: 3px solid var(--border-color);
+  border-top: 3px solid var(--accent-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -110,7 +151,7 @@
 }
 
 .upload-loading p {
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 1rem;
   margin: 0;
 }
