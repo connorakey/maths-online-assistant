@@ -25,9 +25,16 @@ pub async fn get_step_by_step_guidance(image_b64: &str) -> Result<String, Box<dy
         name: None,
     };
 
+    // Handle both raw base64 and data URLs
+    let image_url = if image_b64.starts_with("data:") {
+        image_b64.to_string()
+    } else {
+        format!("data:image/jpeg;base64,{}", image_b64)
+    };
+
     let image_content = ChatCompletionRequestMessageContentPartImage {
         image_url: ImageUrl {
-            url: format!("data:image/jpeg;base64,{}", image_b64),
+            url: image_url,
             detail: None,
         },
     };
@@ -68,9 +75,16 @@ pub async fn get_final_answer(image_b64: &str) -> Result<String, Box<dyn std::er
         name: None,
     };
 
+    // Handle both raw base64 and data URLs
+    let image_url = if image_b64.starts_with("data:") {
+        image_b64.to_string()
+    } else {
+        format!("data:image/jpeg;base64,{}", image_b64)
+    };
+
     let image_content = ChatCompletionRequestMessageContentPartImage {
         image_url: ImageUrl {
-            url: format!("data:image/jpeg;base64,{}", image_b64),
+            url: image_url,
             detail: None,
         },
     };
