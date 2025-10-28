@@ -3,6 +3,8 @@ use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use backend::openai::{get_step_by_step_guidance, get_final_answer};
 use backend::database::{is_valid_api_key, is_root_api_key, add_api_key as db_add_api_key, init_db, test_connection};
+use backend::ratelimit::check_rate_limit;
+
 // An enum to determine the type of request
 #[derive(Debug, Deserialize)]
 pub enum OpenAiRequestType {
@@ -69,6 +71,12 @@ async fn openai(Json(payload): Json<OpenAiRequest>) -> (StatusCode, Json<OpenAiR
                 return (StatusCode::UNAUTHORIZED, Json(OpenAiResponse {
                     success: false,
                     response: "Invalid API key".to_string(),
+                }));
+            }
+            if !check_rate_limit(&payload.api_key) {
+                return (StatusCode::TOO_MANY_REQUESTS, Json(OpenAiResponse {
+                    success: false,
+                    response: "Rate limit exceeded".to_string(),
                 }));
             }
         }
