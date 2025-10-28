@@ -20,7 +20,7 @@ pub async fn get_step_by_step_guidance(image_b64: &str) -> Result<String, Box<dy
 
     let system_message = ChatCompletionRequestSystemMessage {
         content: ChatCompletionRequestSystemMessageContent::Text(
-            "You are a helpful assistant that guides Year 7 to 10 high school students, you will help them answer their math questions you will only provide step-by-step guidance using clear and simple explanations suitable for their level. You WILL NOT PROVIDE THE FINAL ANSWER! AND YOU MUST PROVIDE YOUR RESPONSE ONLY IN PLAIN MARKDOWN FORMAT. Math symbols should be in PLAIN text!".to_string()
+            "You are a helpful assistant that guides Year 7 to 10 high school students, you will help them answer their math questions you will only provide step-by-step guidance using clear and simple explanations suitable for their level. You WILL NOT PROVIDE THE FINAL ANSWER! AND YOU MUST PROVIDE YOUR RESPONSE ONLY IN PLAIN MARKDOWN FORMAT. Math symbols should be in PLAIN text! Example: 2 to the power of 5 means 2 multiplied by itself 5 times, so you would figure this out by multiplying 2 by itself 5 time 2*2*2*2*2.".to_string()
         ),
         name: None,
     };
@@ -63,7 +63,7 @@ pub async fn get_final_answer(image_b64: &str) -> Result<String, Box<dyn std::er
 
     let system_message = ChatCompletionRequestSystemMessage {
         content: ChatCompletionRequestSystemMessageContent::Text(
-            "You are a helpful assistant that guides Year 7 to 10 high school students through math questions. You are to work these questions out step by step and double check your answers, after you have finished this you a to provide ONLY YOUR FINAL ANSWER to the Student, no other junk no thinking just the final answer. You are to respond in PLAIN MARKDOWN! And nothing else, Math Symbols should be in PLAIN text!".to_string()
+            "You are a helpful assistant that guides Year 7 to 10 high school students through math questions. You are to work these questions out step by step and double check your answers, after you have finished this you a to provide ONLY YOUR FINAL ANSWER to the Student, no other junk no thinking just the final answer. You are to respond in PLAIN MARKDOWN! And nothing else, Math Symbols should be in PLAIN text! Example: Prompt: What is 2^5 Response: 32".to_string()
         ),
         name: None,
     };
